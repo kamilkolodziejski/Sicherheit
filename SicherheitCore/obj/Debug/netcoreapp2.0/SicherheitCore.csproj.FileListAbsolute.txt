@@ -1,0 +1,11 @@
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\bin\Debug\netcoreapp2.0\SicherheitCore.deps.json
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\bin\Debug\netcoreapp2.0\SicherheitCore.runtimeconfig.json
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\bin\Debug\netcoreapp2.0\SicherheitCore.runtimeconfig.dev.json
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\bin\Debug\netcoreapp2.0\SicherheitCore.dll
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\bin\Debug\netcoreapp2.0\SicherheitCore.pdb
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\obj\Debug\netcoreapp2.0\SicherheitCore.csprojResolveAssemblyReference.cache
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\obj\Debug\netcoreapp2.0\SicherheitCore.csproj.CoreCompileInputs.cache
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\obj\Debug\netcoreapp2.0\SicherheitCore.AssemblyInfoInputs.cache
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\obj\Debug\netcoreapp2.0\SicherheitCore.AssemblyInfo.cs
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\obj\Debug\netcoreapp2.0\SicherheitCore.dll
+C:\Users\kamil.kolodziejski\source\repos\SicherheitCore\SicherheitCore\obj\Debug\netcoreapp2.0\SicherheitCore.pdb
