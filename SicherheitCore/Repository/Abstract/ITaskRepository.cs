@@ -1,14 +1,15 @@
-﻿using System;
+﻿using SicherheitCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace SicherheitCore.Repository.Abstract
 {
-    public interface ITaskRepository : IRepository<Models.Task>
+    public interface ITaskRepository : IRepository<Task>
     {
-        Task GetByCreatedDate(DateTime date);
-        Task GetByDeadlineDate(DateTime date);
-        IEnumerable<Task> GetActiveTasks();
+
+        IEnumerable<Task> GetUserTasks(Guid userId);
+        
     }
 }

@@ -13,9 +13,14 @@ namespace SicherheitCore.Repository.SqlConcret
         {
         }
 
-        public User GetByLogin(string login)
+        public User GetByEmail(string email)
         {
-            throw new NotImplementedException();
+            var user = context.Users.SingleOrDefault(u => u.EmailAddress == email);
+            if (user == null)
+            {
+                throw new InvalidOperationException($"No users found for {email} !");
+            }
+            return user;
         }
     }
 }

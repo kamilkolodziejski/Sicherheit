@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Hosting;
 
 namespace SicherheitCore
 {
@@ -14,12 +6,31 @@ namespace SicherheitCore
     {
         public static void Main(string[] args)
         {
+            //var host = WebHostDefaults.
+            //            .UseStartup<Startup>()
+            //            .Build();
+            //host.Run();
             BuildWebHost(args).Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+            Microsoft.AspNetCore.WebHost.CreateDefaultBuilder(args)
+            .UseStartup<Startup>()
+            .Build();
+
+        //public static IWebHost BuildWebHost(string[] args)
+        //{
+        //    //var serviceCollection = new ServiceCollection();
+        //    //serviceCollection.AddSingleton<ILogger, SimplyLogger>();
+        //    //var serviceProvider = serviceCollection.BuildServiceProvider();
+        //    return new WebHostBuilder()
+        //                .UseStartup<Startup>()
+        //                //.ConfigureServices(s =>
+        //                //{
+        //                //    s.AddSingleton<ILogger, SimplyLogger>();
+        //                //    s.AddMvc();
+        //                //})
+        //                .Build();
+        //}
     }
 }

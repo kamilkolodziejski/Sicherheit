@@ -3,45 +3,23 @@ using SicherheitCore.Repository.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace SicherheitCore.Repository.SqlConcret
 {
-    public class SqlTaskRepository : ITaskRepository
+    public class SqlTaskRepository : SqlRepository<Task>, ITaskRepository
     {
-        public void Add(Models.Task entity)
+        private readonly SicherheitCoreContext _context;
+
+        public SqlTaskRepository(SicherheitCoreContext context) : base(context)
         {
-            throw new NotImplementedException();
+            this._context = context;
         }
 
-        public IEnumerable<System.Threading.Tasks.Task> GetActiveTasks()
+        public IEnumerable<Task> GetUserTasks(Guid userId)
         {
-            throw new NotImplementedException();
+            return _context.Set<Task>().Where(x => (x.UserId == userId));
         }
 
-        public System.Threading.Tasks.Task GetByCreatedDate(DateTime date)
-        {
-            throw new NotImplementedException();
-        }
-
-        public System.Threading.Tasks.Task GetByDeadlineDate(DateTime date)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Models.Task GetById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Remove(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Models.Task entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
