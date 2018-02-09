@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SicherheitCore.Models;
 using SicherheitCore.Models.Requests;
-using SicherheitCore.Repository.SqlConcret;
 using SicherheitCore.Services;
 using SicherheitCore.Services.Abstract;
 
@@ -15,35 +15,31 @@ namespace SicherheitCore.Controllers
         private readonly ITaskService _taskService;
         private readonly IUserService _userService;
 
-        public TasksController(ITaskService taskService)
+        public TasksController(ITaskService taskService, IUserService userService)
         {
             _taskService = taskService;
+            _userService = userService;
         }
 
         // GET: Tasks
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var modelTasks = _taskService.GetAll();
-            if(modelTasks == null) { 
-}
-            return View(_taskService.GetAll());
+            Guid? id = _userService.CurrentUser().Id;
+            if (id == null)
+                throw new ArgumentNullException();
+            var tasks = await _taskService.GetUserTasks(id.Value);
+            return View(tasks);
         }
 
         // GET: Tasks/Details/5
-        public IActionResult Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             var taskId = id.GetValueOrDefault();
             if (taskId == null)
-            {
-                throw new ArgumentNullException("No task ID!");
-            }
-
-            var task = _taskService.GetTask(taskId);
+                throw new ArgumentNullException("Internal error exception!");
+            var task = await _taskService.GetTaskAndUser(taskId);
             if (task == null)
-            {
-                throw new Exception("Internal error exception!");
-            }
-
+                throw new Exception("No existing task for this ID!");
             return View(task);
         }
 
@@ -59,43 +55,37 @@ namespace SicherheitCore.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreateTaskRequest request)
+        public async Task<IActionResult> Create(CreateOrUpdateTaskRequest request)
         {
             if (ModelState.IsValid)
             {
-                Task task = new Task();
-                task.Title = request.Title;
-                task.Priority = request.Priority;
-                task.Deadline = request.Deadline;
-                task.Description = request.Description;
-                var userId = _userService.CurrentUser().Id;
+                PlannedTask task = await _taskService.CreateTask(request);
                 return RedirectToAction(nameof(Index));
             }
-            return View(request);
+            return View("Details",request);
         }
-        /*
+        
         // GET: Tasks/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public IActionResult Edit(Guid? id)
         {
-            if (id == null)
+            if (id == null || !id.HasValue)
             {
                 return NotFound();
             }
-
-            var task = await _context.Tasks.SingleOrDefaultAsync(m => m.Id == id);
+            var task = _taskService.GetTaskAndUser(id.Value);
             if (task == null)
             {
                 return NotFound();
             }
             return View(task);
         }
-
+        
         // POST: Tasks/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("UserId,Title,Description,Deadline,Type,Priority,Id,UpdatedAt,CreatedAt")] Models.Task task)
+        public async Task<IActionResult> Edit(Guid id, [Bind("UserId,Title,Description,Deadline,Type,Priority,Id,UpdatedAt,CreatedAt")] PlannedTask task)
         {
             if (id != task.Id)
             {
@@ -104,58 +94,31 @@ namespace SicherheitCore.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(task);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TaskExists(task.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _taskService.Update(task);
                 return RedirectToAction(nameof(Index));
             }
             return View(task);
         }
 
         // GET: Tasks/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var task = await _context.Tasks
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (task == null)
-            {
-                return NotFound();
-            }
+            await _taskService.Delete(id);
 
-            return View(task);
+            return View();
         }
         // POST: Tasks/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var task = await _context.Tasks.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Tasks.Remove(task);
-            await _context.SaveChangesAsync();
+            await _taskService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-
-        private bool TaskExists(Guid id)
-        {
-            return _context.Tasks.Any(e => e.Id == id);
-        }*/
-    }
+     }
 }

@@ -11,14 +11,14 @@ namespace SicherheitCore.Models
         public DateTime UpdatedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public EntityBase()
+        protected EntityBase()
         {
             this.Id = Guid.NewGuid();
             this.CreatedAt = DateTime.Now;
             this.UpdatedAt = DateTime.Now;
         }
 
-        private void Update()
+        public void Updated()
         {
             this.UpdatedAt = DateTime.Now;
         }

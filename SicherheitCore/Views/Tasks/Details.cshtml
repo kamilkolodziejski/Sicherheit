@@ -1,4 +1,4 @@
-﻿@model SicherheitCore.Models.Task
+﻿@model SicherheitCore.Models.PlannedTask
 
 @{
     ViewData["Title"] = "Details";
@@ -11,10 +11,16 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.UserId)
+            @Html.DisplayNameFor(model => model.User.EmailAddress)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.UserId)
+            @Html.DisplayFor(model => model.User.EmailAddress)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Name)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Title)

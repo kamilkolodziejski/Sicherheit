@@ -1,25 +1,27 @@
-﻿using SicherheitCore.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SicherheitCore.Models;
 using SicherheitCore.Repository.Abstract;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace SicherheitCore.Repository.SqlConcret
 {
-    public class SqlTaskRepository : SqlRepository<Task>, ITaskRepository
+    public class SqlTaskRepository : SqlRepository<PlannedTask>, ITaskRepository
     {
-        private readonly SicherheitCoreContext _context;
-
         public SqlTaskRepository(SicherheitCoreContext context) : base(context)
         {
-            this._context = context;
         }
 
-        public IEnumerable<Task> GetUserTasks(Guid userId)
+        public async Task<IEnumerable<PlannedTask>> getTasksByUserIdAsync(Guid userId)
         {
-            return _context.Set<Task>().Where(x => (x.UserId == userId));
+            return await _context.Tasks
+                .Where(t => t.UserId == userId)
+                .AsNoTracking()
+                .ToListAsync();
         }
-
     }
 }

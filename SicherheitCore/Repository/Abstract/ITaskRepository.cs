@@ -1,15 +1,15 @@
 ﻿using SicherheitCore.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace SicherheitCore.Repository.Abstract
 {
-    public interface ITaskRepository : IRepository<Task>
+    public interface ITaskRepository : IRepository<PlannedTask>
     {
-
-        IEnumerable<Task> GetUserTasks(Guid userId);
-        
+        Task<IEnumerable<PlannedTask>> getTasksByUserIdAsync(Guid userId);
     }
 }

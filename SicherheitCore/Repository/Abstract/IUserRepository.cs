@@ -8,6 +8,6 @@ namespace SicherheitCore.Repository.Abstract
 {
     public interface IUserRepository : IRepository<User>
     {
-        User GetByEmail(string email);
+        Task<User> GetUserByEmailAsync(string email);
     }
 }

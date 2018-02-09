@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -60,15 +61,15 @@ namespace SicherheitCore
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
+                    name: "home",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
             _logger.Log($"Starting initialize database...");
-            initDatabase(app);
+            InitDatabase(app);
         }
 
-        private void initDatabase(IApplicationBuilder app)
+        private void InitDatabase(IApplicationBuilder app)
         {
             try
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,7 +15,7 @@ namespace SicherheitCore.Controllers
 {
 
     //[Authorize(Roles = "Admin")]
-    [Route("users")]
+    //[Route("users")]
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
@@ -24,21 +25,21 @@ namespace SicherheitCore.Controllers
             _userService = userService;
         }
        
-        [HttpGet]
-        public IActionResult Index()
+        //[HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View(_userService.GetUsers());
+            return View(await _userService.GetUsers());
         }
         
-        [HttpGet("id")]
-        public IActionResult Details(Guid? id)
+        //[HttpGet("id")]
+        public async Task<IActionResult> Details(Guid? id)
         {
             var userId = id.GetValueOrDefault();
             if (userId == null)
             {
                 return NotFound();
             }
-            User user = _userService.GetUserById(userId);
+            var user = await _userService.GetUser(userId);
             if (user == null)
             {
                 return NotFound();
@@ -46,24 +47,24 @@ namespace SicherheitCore.Controllers
             return View(user);
         }
 
-        [HttpGet("users/create")]
+        //[HttpGet("users/create")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [HttpPost("users/create")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(RegisterUserRequest request)
+        public async Task<IActionResult> Create(RegisterOrUpdateUserRequest request)
         {
             if (ModelState.IsValid)
             {
-                User user = new User();
+                var user = new User();
                 user.EmailAddress = request.Email;
                 user.Password = request.Password;
                 user.Name = request.Name;
                 user.IsActive = true;
-                _userService.RegisterUser(request.Email, request.Password, request.Name);
+                await _userService.Register(request.Email, request.Password, request.Name);
                 return RedirectToAction(nameof(Index));
             }
             return View(request);

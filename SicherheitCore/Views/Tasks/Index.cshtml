@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SicherheitCore.Models.Task>
+﻿@model IEnumerable<SicherheitCore.Models.PlannedTask>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,7 +13,7 @@
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.UserId)
+                    @Html.DisplayNameFor(model => model.User.EmailAddress)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Title)
@@ -43,7 +43,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.UserId)
+                @Html.DisplayFor(modelItem => item.User.EmailAddress)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)

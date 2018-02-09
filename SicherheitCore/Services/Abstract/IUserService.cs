@@ -11,18 +11,14 @@ namespace SicherheitCore.Services
     {
         User CurrentUser();
 
-        User RegisterUser(String email, String password, String name);
+        Task<User> Register(String email, String password, String name);
 
-        void ChangePassword(Guid id, String newPassword);
+        Task<bool> Authenticate(String email, String password);
 
-        void ChangeName(Guid id, String newName);
+        Task<IEnumerable<User>> GetUsers();
 
-        bool Authenticate(String email, String password);
+        Task<User> GetUser(Guid id);
 
-        IEnumerable<User> GetUsers();
-
-        User GetUser(Guid id);
-
-        User GetUser(String email);
+        Task<User> GetUser(String email);
     }
 }

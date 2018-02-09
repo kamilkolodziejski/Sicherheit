@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SicherheitCore.Models.Concret;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SicherheitCore.Models.Requests
 {
-    public class CreateTaskRequest
+    public class CreateOrUpdateTaskRequest
     {
         [Required]
         [Display(Name = "Task Title")]
@@ -23,6 +24,6 @@ namespace SicherheitCore.Models.Requests
 
         [Required]
         [Display(Name = "Task Priority")]
-        public Task.TaskPriority Priority { get; set; }
+        public TaskPriority Priority { get; set; }
     }
 }

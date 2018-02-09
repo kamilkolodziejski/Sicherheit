@@ -1,4 +1,5 @@
-﻿using SicherheitCore.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SicherheitCore.Models;
 using SicherheitCore.Repository.Abstract;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,9 @@ namespace SicherheitCore.Repository.SqlConcret
         {
         }
 
-        public User GetByEmail(string email)
+        public async Task<User> GetUserByEmailAsync(string email)
         {
-            var user = context.Users.SingleOrDefault(u => u.EmailAddress == email);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.EmailAddress == email);
             if (user == null)
             {
                 throw new InvalidOperationException($"No users found for {email} !");

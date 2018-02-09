@@ -21,7 +21,7 @@ namespace SicherheitCore.Services
         private readonly SicherheitCoreContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public User CurrentUser => GetCurrentUser();
+        public User CurrentUser() => GetCurrentUser();
 
         public UserService(SicherheitCoreContext context, IUserRepository userRepository, IHttpContextAccessor httpContextAccessor)
         {
@@ -30,96 +30,56 @@ namespace SicherheitCore.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-
-        public User RegisterUser(String email, String password, String name)
+        public async Task<User> Register(string email, string password, string name)
         {
             if(!IsValidEmail(email))
-            {
                 throw new ArgumentException("Invalid email address!");
-            }
             if(_context.Users.Any( x => x.EmailAddress == email))
-            {
                 throw new InvalidOperationException($"User with email address {email} alredy exists.");
-            }
-            User user = new User();
-            user.EmailAddress = email;
-            user.Name = name;
-            user.IsActive = true;
+            User user = new User
+            {
+                EmailAddress = email,
+                Name = name,
+                // PASSWORD ENCRYPTION
+                Password = password
+            };
 
-            // PASSWORD ENCRYPTION
-            user.Password = password;
-
-            _userRepository.Add(user);
+            await _userRepository.AddAsync(user);
             return user;
         }
 
-        public void ChangePassword(Guid id, String newPassword)
-        {
-            User user = _userRepository.GetById(id);
-            if(user==null)
-            {
-                throw new InvalidOperationException($"User with ID {id} not exists!.");
-            }
-            user.Password = newPassword;
-            _userRepository.Update(user);
-        }
-
-        public void ChangeName(Guid id, String newName)
-        {
-            User user = _userRepository.GetById(id);
-            if (user == null)
-            {
-                throw new InvalidOperationException($"User with ID {id} not exists!.");
-            }
-            user.Name = newName;
-            _userRepository.Update(user);
-        }
-
-        public bool Authenticate(String email, String password)
+        public async Task<bool> Authenticate(String email, String password)
         {
             if (!IsValidEmail(email))
-            {
                 throw new ArgumentException("Invalid email address!");
-            }
-            var user = _userRepository.GetByEmail(email);
+            var user = await _userRepository.GetUserByEmailAsync(email);
             if (user == null)
-            {
                 throw new InvalidOperationException($"User with email: {email} not exists!.");
-            }
-
             // PASSWORD ENCRYPTION
             //user.Password = password;
 
             return user.Password == password;
         }
 
-        public IEnumerable<User> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            return _userRepository.GetAll();
+            return await _userRepository.GetAllAsync();
         }
 
-        public User GetUser(Guid id)
+        public async Task<User> GetUser(Guid id)
         {
-            return _userRepository.GetById(id);
+            return await _userRepository.GetByIdAsync(id);
         }
 
-        public User GetUser(string email)
+        public async Task<User> GetUser(string email)
         {
-            if (!IsValidEmail(email))
-            {
-                throw new ArgumentException("Invalid email address!");
-            }
-            return _userRepository.GetByEmail(email);
+            return await _userRepository.GetUserByEmailAsync(email);
         }
 
         private User GetCurrentUser()
         {
-            ClaimsPrincipal principal = _httpContextAccessor.HttpContext.User;
-
-            string email = principal.FindFirst(ClaimTypes.Email)?.Value;
-            if (string.IsNullOrWhiteSpace(email))
-                return null;
-            return GetUser(email);
+            var user = _userRepository.GetAllAsync().Result.FirstOrDefault();            
+            return user;
         }
 
         private bool IsValidEmail(String email)
@@ -130,11 +90,6 @@ namespace SicherheitCore.Services
                 return true;
             }
             catch { return false; }
-        }
-
-        User IUserService.CurrentUser()
-        {
-            throw new NotImplementedException();
         }
     }
 }

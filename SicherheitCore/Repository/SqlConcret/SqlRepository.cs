@@ -11,46 +11,41 @@ namespace SicherheitCore.Repository.SqlConcret
     public class SqlRepository<TEntity> : IRepository<TEntity>
         where TEntity : EntityBase, new()
     {
-        protected readonly SicherheitCoreContext context;
+        protected readonly SicherheitCoreContext _context;
 
         public SqlRepository(SicherheitCoreContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
-        public TEntity GetById(Guid id)
+        public async Task<TEntity> GetByIdAsync(Guid id)
         {
-            return context.Set<TEntity>().Find(id);
+            return await _context.Set<TEntity>().FindAsync(id);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return context.Set<TEntity>();
+            return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public IEnumerable<TEntity> GetWithFilters(Expression<Func<TEntity, bool>> exp)
+        public async Task AddAsync(TEntity entity)
         {
-            return context.Set<TEntity>().Where(exp);
+            _context.Set<TEntity>().Add(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Add(TEntity entity)
-        {
-            context.Set<TEntity>().Add(entity);
-            context.SaveChanges();
-        }
-
-        public void Remove(Guid id)
+        public async Task RemoveAsync(Guid id)
         {
             TEntity entity = new TEntity();
             entity.Id = id;
-            context.Entry(entity).State = EntityState.Deleted;
-            context.SaveChanges();
+            _context.Entry(entity).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
-            context.Entry(entity).State = EntityState.Modified;
-            context.SaveChanges();
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -10,17 +10,15 @@ namespace SicherheitCore
     public interface IRepository<TEntity>
         where TEntity : EntityBase, new()
     {
-        TEntity GetById(Guid id);
+        Task<TEntity> GetByIdAsync(Guid id);
 
-        IEnumerable<TEntity> GetAll();
+        Task<IEnumerable<TEntity>> GetAllAsync();
 
-        IEnumerable<TEntity> GetWithFilters(Expression<Func<TEntity, bool>> exp);
+        Task AddAsync(TEntity entity);
 
-        void Add(TEntity entity);
+        Task RemoveAsync(Guid id);
 
-        void Remove(Guid id);
-
-        void Update(TEntity entity);
+        Task UpdateAsync(TEntity entity);
 
     }
 }

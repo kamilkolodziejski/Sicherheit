@@ -1,23 +1,24 @@
 ﻿using SicherheitCore.Models;
+using SicherheitCore.Models.Concret;
+using SicherheitCore.Models.ModelsDto;
+using SicherheitCore.Models.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SicherheitCore.Services.Abstract
 {
     public interface ITaskService
     {
-
-        Guid CreateTask(Task task);
-
-        Task GetTask(Guid taskId);
-
-        IEnumerable<Task> GetUserTasks(Guid userId);
-
-        IEnumerable<Task> GetAll();
-
-        void DeleteTask(Guid guid);
-
-        void UpdateTask(Task task);
+        Task CreateTask(String title, String description, DateTime deadline, TaskPriority priority);
+        Task<PlannedTaskDto> GetTask(Guid taskId);
+        Task<IEnumerable<PlannedTaskDto>> GetUserTasks(Guid userId);
+        Task Delete(Guid taskId);
+        Task ChangeTask(Guid taskId, String name, String description);
+        Task ChangeTaskPriority(Guid taskId, TaskPriority priority);
+        Task CloseTask();
+        Task OpenTask();
+        Task CancelTask();
     }
 }
