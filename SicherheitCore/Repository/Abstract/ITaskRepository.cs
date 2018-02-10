@@ -10,6 +10,6 @@ namespace SicherheitCore.Repository.Abstract
 {
     public interface ITaskRepository : IRepository<PlannedTask>
     {
-        Task<IEnumerable<PlannedTask>> getTasksByUserIdAsync(Guid userId);
+        Task<IEnumerable<PlannedTask>> GetByUserIdAsync(Guid userId);
     }
 }

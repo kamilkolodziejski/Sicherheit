@@ -16,7 +16,7 @@ namespace SicherheitCore.Repository.SqlConcret
         {
         }
 
-        public async Task<IEnumerable<PlannedTask>> getTasksByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<PlannedTask>> GetByUserIdAsync(Guid userId)
         {
             return await _context.Tasks
                 .Where(t => t.UserId == userId)

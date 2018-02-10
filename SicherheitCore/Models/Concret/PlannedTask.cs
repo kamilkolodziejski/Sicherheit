@@ -10,11 +10,9 @@ namespace SicherheitCore.Models
         public String Title { get; set; }
         public string Description { get; set; }
         public DateTime Deadline { get; set; }
-        public TaskState Type { get; set; }
-        public TaskPriority Priority { get; set; }
-        
+        public TaskState State { get; set; }
+        public TaskPriority Priority { get; set; }        
         public Guid UserId { get; set; }
-        public virtual User User { get; set; }
         
     }
 }

@@ -52,7 +52,7 @@ namespace SicherheitCore.Services
         {
             if (!IsValidEmail(email))
                 throw new ArgumentException("Invalid email address!");
-            var user = await _userRepository.GetUserByEmailAsync(email);
+            var user = await _userRepository.GetByEmailAsync(email);
             if (user == null)
                 throw new InvalidOperationException($"User with email: {email} not exists!.");
             // PASSWORD ENCRYPTION
@@ -72,15 +72,10 @@ namespace SicherheitCore.Services
         }
 
         public async Task<User> GetUser(string email)
-        {
-            return await _userRepository.GetUserByEmailAsync(email);
-        }
+            => await _userRepository.GetByEmailAsync(email);
 
         private User GetCurrentUser()
-        {
-            var user = _userRepository.GetAllAsync().Result.FirstOrDefault();            
-            return user;
-        }
+            => _userRepository.GetAllAsync().Result.FirstOrDefault();            
 
         private bool IsValidEmail(String email)
         {

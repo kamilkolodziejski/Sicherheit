@@ -5,7 +5,6 @@ using SicherheitCore.Services.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SicherheitCore.Models.ModelsDto;
 
 namespace SicherheitCore.Services.Concret
 {
@@ -20,7 +19,7 @@ namespace SicherheitCore.Services.Concret
             this._userService = userService;
         }
 
-        async Task ITaskService.CreateTask(string title, string description, DateTime deadline, TaskPriority priority)
+        async public Task CreateTask(string title, string description, DateTime deadline, TaskPriority priority)
         {
             var task = new PlannedTask
             {
@@ -28,50 +27,50 @@ namespace SicherheitCore.Services.Concret
                 Deadline = deadline,
                 Description = description,
                 Priority = priority,
-                Type = TaskState.Active,
+                State = TaskState.Active,
                 UserId = _userService.CurrentUser().Id
             };
             await _taskRepository.AddAsync(task);
         }
 
-        Task<PlannedTaskDto> ITaskService.GetTask(Guid taskId)
+        public async Task<PlannedTask> GetTask(Guid taskId)
+            => await _taskRepository.GetByIdAsync(taskId);
+
+        public async Task<IEnumerable<PlannedTask>> GetUserTasks(Guid userId)
+            => await _taskRepository.GetByUserIdAsync(userId);
+
+        private async Task changeState(Guid taskId, TaskState state)
         {
-            throw new NotImplementedException();
+            var task = await _taskRepository.GetByIdAsync(taskId);
+            task.State = state;
+            await _taskRepository.UpdateAsync(task);
         }
 
-        Task<IEnumerable<PlannedTaskDto>> ITaskService.GetUserTasks(Guid userId)
+        public async Task ChangeTask(Guid taskId, string title, string description)
         {
-            throw new NotImplementedException();
+            var task = await _taskRepository.GetByIdAsync(taskId);
+            task.Title = title;
+            task.Description = description;
+            await _taskRepository.UpdateAsync(task);
         }
 
-        public Task ChangeTask(Guid taskId, string name, string description)
+        public async Task ChangeTaskPriority(Guid taskId, TaskPriority priority)
         {
-            throw new NotImplementedException();
+            var task = await _taskRepository.GetByIdAsync(taskId);
+            task.Priority = priority;
+            await _taskRepository.UpdateAsync(task);
         }
 
-        public Task ChangeTaskPriority(Guid taskId, TaskPriority priority)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task CloseTask(Guid taskId)
+            => await changeState(taskId, TaskState.Done);
 
-        public Task CloseTask()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task OpenTask(Guid taskId)
+            => await changeState(taskId, TaskState.Active);
 
-        public Task OpenTask()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task CancelTask(Guid taskId)
+            => await changeState(taskId, TaskState.Done);
 
-        public Task CancelTask()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Delete(Guid taskId)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task Delete(Guid taskId)
+            => await _taskRepository.RemoveAsync(taskId);
     }
 }
